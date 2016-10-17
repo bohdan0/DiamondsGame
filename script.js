@@ -2,18 +2,16 @@ var points = 0;
 var board;
 var size;
 var clicked = false;
-
-var regClick = document.createElement('audio');
-var errClick = document.createElement('audio');
-var gameOverSound = document.createElement('audio');
-regClick.setAttribute('src', 'regClick.mp3');
-errClick.setAttribute('src', 'errClick.mp3');
-gameOverSound.setAttribute('src', 'gameOver.mp3');
-$.get();
+// Sound variables
+var regClick;
+var errClick;
+var gameOverSound;
+var main;
 
 $(document).ready(function() {
   getSize();
   firstLoad();
+  setUpSounds();
   play();
 });
 
@@ -28,6 +26,23 @@ function firstLoad() {
   makeTableHTML();
   startBoard();
   boardToScr();
+}
+
+function setUpSounds() {
+  regClick = document.createElement('audio');
+  regClick.setAttribute('src', 'regClick.mp3');
+
+  errClick = document.createElement('audio');
+  errClick.setAttribute('src', 'errClick.mp3');
+
+  gameOverSound = document.createElement('audio');
+  gameOverSound.setAttribute('src', 'gameOver.mp3');
+
+  main = document.createElement('audio');
+  main.volume = .01;
+  main.setAttribute('src', 'main.mp3');
+  main.setAttribute('autoplay', 'autoplay');
+  main.setAttribute('loop', 'loop');
 }
 
 function play() {
@@ -117,9 +132,11 @@ function gameStep() {
     $('td').removeClass('winComb');
     boardToScr();
       if (gameOver()) {
+        main.pause();
         gameOverSound.play();
         $('.info').html('GAME OVER! Total score: '+points);
-        $('body').css('background', '#956004');
+        $('.info').css('color', 'white');
+        $('body').css('background', 'black');
         stopPropagation();
       }
     clicked = false;
