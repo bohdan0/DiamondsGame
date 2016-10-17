@@ -3,6 +3,14 @@ var board;
 var size;
 var clicked = false;
 
+var regClick = document.createElement('audio');
+var errClick = document.createElement('audio');
+var gameOverSound = document.createElement('audio');
+regClick.setAttribute('src', 'regClick.mp3');
+errClick.setAttribute('src', 'errClick.mp3');
+gameOverSound.setAttribute('src', 'gameOver.mp3');
+$.get();
+
 $(document).ready(function() {
   getSize();
   firstLoad();
@@ -109,6 +117,7 @@ function gameStep() {
     $('td').removeClass('winComb');
     boardToScr();
       if (gameOver()) {
+        gameOverSound.play();
         $('.info').html('GAME OVER! Total score: '+points);
         $('body').css('background', '#956004');
         stopPropagation();
@@ -159,9 +168,11 @@ function replaceMaxSequence(id) {
   }
 
   if (result.length == 1) {
+    errClick.play();
     return $('.info').html('Too short sequence! Choose sequence of two or more');
   }
 
+  regClick.play();
   countPoints(result.length);
 
   result = result.sort();
