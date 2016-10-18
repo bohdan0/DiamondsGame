@@ -1,3 +1,6 @@
+body {
+  background: #fdeb9f;
+}
 .board {
   border: 2px solid black;
   margin: 30px auto;
@@ -18,4 +21,13 @@ td {
 .level {
   position: absolute;
   font-size: 20px;
+}
+.musicControl {
+  height: 80px;
+  width: 80px;
+  border-radius: 40px;
+  background: url('https://cdn3.iconfinder.com/data/icons/buttons/512/Icon_4-512.png');
+  background-size: cover;
+  float: right;
+  position: absolute
 }

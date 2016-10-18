@@ -2,10 +2,12 @@ var points = 0;
 var board;
 var size;
 var clicked = false;
+var difficulty = 3;
 // Sound variables
 var regClick;
 var errClick;
 var gameOverSound;
+var levelUp;
 var main;
 
 $(document).ready(function() {
@@ -13,6 +15,17 @@ $(document).ready(function() {
   firstLoad();
   setUpSounds();
   play();
+  $('.musicControl').click(function() {
+    if (main.paused) {
+      main.play();
+      $('.musicControl').css("background", "url('https://cdn3.iconfinder.com/data/icons/buttons/512/Icon_4-512.png')");
+      $('.musicControl').css("background-size", "cover");
+    } else {
+      main.pause();
+      $('.musicControl').css("background", "url('https://cdn2.iconfinder.com/data/icons/media-and-navigation-buttons-round/512/Button_3-512.png')");
+      $('.musicControl').css("background-size", "cover");
+    }
+  });
 });
 
 function getSize() {
@@ -37,6 +50,9 @@ function setUpSounds() {
 
   gameOverSound = document.createElement('audio');
   gameOverSound.setAttribute('src', 'gameOver.mp3');
+
+  levelUp = document.createElement('audio');
+  levelUp.setAttribute('src', 'levelUp.mp3');
 
   main = document.createElement('audio');
   main.volume = .01;
@@ -100,20 +116,12 @@ function generateValue() {
     return colors[random];
 }
 
-function checkDifficulty(level) {
-  switch(level) {
-  case 3:
-    $('body').css('background', '#62F97B');
-    break;
-  case 4:
-    $('body').css('background', '#F9DA41');
-    break;
-  case 5:
-    $('body').css('background', '#E64545');
-    break;
+function checkDifficulty(currDifficulty) {
+  if (currDifficulty != difficulty) {
+    levelUp.play();
+    difficulty = currDifficulty;
   }
-
-  $('.level').html('Your difficulty: '+level+' colors');
+  $('.level').html('Your difficulty: '+currDifficulty+' colors');
 }
 
 function boardToScr() {
