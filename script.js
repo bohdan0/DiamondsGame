@@ -1,7 +1,7 @@
 var points = 0;
 var board;
 var size;
-var clicked = false;
+var clickedFlag = false;
 var difficulty = 3;
 // Sound variables
 var regClick;
@@ -62,11 +62,27 @@ function setUpSounds() {
 }
 
 function play() {
-  $('td').click(function() {
-    if (clicked == false) {
-      clicked = true;
-      replaceMaxSequence(parseInt($(this).attr('id')));
-      gameStep();
+  var clickedIds = '';
+  $('.board').hover(function() {
+    $('td').hover(function() {
+      if (clickedFlag == false) {
+        $('.hoveredSequence').removeClass('hoveredSequence');
+        clickedIds = hoverSequence(parseInt($(this).attr('id')));
+      }
+
+      $(this).click(function() {
+        if (clickedFlag == false && clickedIds != '') {
+          clickedFlag = true;
+          replaceSequence(clickedIds);
+          gameStep();
+          clickedIds = '';
+        }
+      });
+
+    });
+  }, function() {
+    if (clickedFlag == false) {
+      $('.hoveredSequence').removeClass('hoveredSequence');
     }
   });
 }
@@ -119,6 +135,7 @@ function generateValue() {
 function checkDifficulty(currDifficulty) {
   if (currDifficulty != difficulty) {
     levelUp.play();
+    alert('Congratulations!!! Yoy passed level with ' + difficulty + ' colors. Next difficulty: ' + currDifficulty + ' colors')
     difficulty = currDifficulty;
   }
   $('.level').html('Your difficulty: '+currDifficulty+' colors');
@@ -137,7 +154,7 @@ function boardToScr() {
 function gameStep() {
   setTimeout(function() {
     $('.info').html('Total score: '+points);
-    $('td').removeClass('winComb');
+    $('td').removeClass('hoveredSequence');
     boardToScr();
       if (gameOver()) {
         main.pause();
@@ -147,13 +164,27 @@ function gameStep() {
         $('body').css('background', 'black');
         stopPropagation();
       }
-    clicked = false;
+    clickedFlag = false;
+    $('td').on('click');
   }, 700);
 }
 
-function lightMaxSequence(arr) {
-  var id = arr[0] * size + arr[1];
-	$('#'+id.toString()).addClass('winComb');
+function lightSequence(arr) {
+  for (var i = 0; i < arr.length; i++) {
+    var id = arr[i][0] * size + arr[i][1];
+  	$('#'+id.toString()).addClass('hoveredSequence');
+  }
+}
+
+function lightClickedSequence(arr) {
+  for (var i = 0; i < arr.length; i++) {
+    var id = arr[i][0] * size + arr[i][1];
+      if (arr.length > 3) {
+        $('#'+id.toString()).effect('pulsate');
+      } else {
+        $('#'+id.toString()).effect('highlight');
+      }
+  }
 }
 
 function gameOver() {
@@ -168,50 +199,50 @@ function gameOver() {
   return true;
 }
 
-function replaceMaxSequence(id) {
+function hoverSequence(id) {
   var row_idx = Math.floor(id / size);
   var col_idx = id % size;
   var clicked = board[row_idx][col_idx];
-  var result = [ [row_idx, col_idx] ];
+  var hovered = [ [row_idx, col_idx] ];
   var up = 1, right = 1, bottom = 1, left = 1;
 
   while (row_idx-up >= 0 && clicked == board[row_idx-up][col_idx]) {
-    result.push([row_idx-up, col_idx]);
+    hovered.push([row_idx-up, col_idx]);
     up++;
   }
   while (clicked == board[row_idx][col_idx+right]) {
-    result.push([row_idx, col_idx+right]);
+    hovered.push([row_idx, col_idx+right]);
     right++;
   }
   while (row_idx+bottom < size && clicked == board[row_idx+bottom][col_idx]) {
-    result.push([row_idx+bottom, col_idx]);
+    hovered.push([row_idx+bottom, col_idx]);
     bottom++;
   }
   while (clicked == board[row_idx][col_idx-left]) {
-    result.push([row_idx, col_idx-left]);
+    hovered.push([row_idx, col_idx-left]);
     left++;
   }
 
-  if (result.length == 1) {
-    errClick.play();
-    return $('.info').html('Too short sequence! Choose sequence of two or more');
-  }
+  if (hovered.length == 1) { return ''; }
 
+  lightSequence(hovered);
+
+  return hovered;
+}
+
+function replaceSequence(arr) {
   regClick.play();
-  countPoints(result.length);
+  countPoints(arr.length);
+  lightClickedSequence(arr);
+  arr = arr.sort();
+  for (var i=0; i<arr.length; i++) {
+    var row_idx = arr[i][0];
+    var col_idx = arr[i][1];
 
-  result = result.sort();
-
-  for (var i=0; i<result.length; i++) {
-    lightMaxSequence(result[i]);
-
-    row_idx = result[i][0];
-    col_idx = result[i][1];
-
-      while (row_idx > 0) {
-        takeUpperBackground([row_idx, col_idx]);
-        row_idx--;
-      }
+    while (row_idx > 0) {
+      takeUpperBackground([row_idx, col_idx]);
+      row_idx--;
+    }
 
     board[row_idx][col_idx] = generateValue();
   }
