@@ -57,7 +57,7 @@ function setUpSounds() {
   main = document.createElement('audio');
   main.volume = .01;
   main.setAttribute('src', 'main.mp3');
-  // main.setAttribute('autoplay', 'autoplay');
+  main.setAttribute('autoplay', 'autoplay');
   main.setAttribute('loop', 'loop');
 }
 
