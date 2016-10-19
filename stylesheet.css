@@ -3,15 +3,14 @@ body {
 }
 .board {
   border: 5px solid black;
-  border-radius: 10px;
+  border-radius: 15px;
   margin: 30px auto;
   background: rgb(232, 232, 232);
 }
 td {
   height: 50px;
   width: 50px;
-  border: 2px solid rgba(0,0,0,0);
-  border-radius: 15px;
+  border-radius: 10px;
 }
 .hoveredSequence {
   opacity: 0.75;

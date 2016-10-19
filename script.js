@@ -57,7 +57,7 @@ function setUpSounds() {
   main = document.createElement('audio');
   main.volume = .01;
   main.setAttribute('src', 'main.mp3');
-  main.setAttribute('autoplay', 'autoplay');
+  // main.setAttribute('autoplay', 'autoplay');
   main.setAttribute('loop', 'loop');
 }
 
@@ -71,7 +71,8 @@ function play() {
       }
 
       $(this).click(function() {
-        if (clickedFlag == false && clickedIds != '') {
+        if (clickedFlag == false) {
+          if (clickedIds == '') { return errClick.play() }
           clickedFlag = true;
           replaceSequence(clickedIds);
           gameStep();
@@ -135,7 +136,7 @@ function generateValue() {
 function checkDifficulty(currDifficulty) {
   if (currDifficulty != difficulty) {
     levelUp.play();
-    alert('Congratulations!!! Yoy passed level with ' + difficulty + ' colors. Next difficulty: ' + currDifficulty + ' colors')
+    alert('Congratulations!!! You passed level with ' + difficulty + ' colors. Next difficulty: ' + currDifficulty + ' colors')
     difficulty = currDifficulty;
   }
   $('.level').html('Your difficulty: '+currDifficulty+' colors');
