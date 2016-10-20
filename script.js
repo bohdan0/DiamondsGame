@@ -81,7 +81,7 @@ function setUpSounds() {
   levelUp.setAttribute('src', 'levelUp.mp3');
 
   main = document.createElement('audio');
-  main.volume = .05;
+  main.volume = 0.5;
   main.setAttribute('src', 'main.mp3');
   main.setAttribute('autoplay', 'autoplay');
   main.setAttribute('loop', 'loop');
@@ -90,7 +90,7 @@ function setUpSounds() {
 function play() {
   var clickedIds = '';
   $('.board').hover(function() {
-    $('td').hover(function() {
+    $('td').mouseover(function() {
       if (clickedFlag == false) {
         $('.hovered').removeClass('hovered');
         clickedIds = hoverSequence(parseInt($(this).attr('id')));
@@ -99,6 +99,7 @@ function play() {
   }, function() {
     if (clickedFlag == false) {
       $('.hovered').removeClass('hovered');
+      // clickedIds = '';
     }
   });
 
