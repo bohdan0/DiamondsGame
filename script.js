@@ -95,21 +95,20 @@ function play() {
         $('.hovered').removeClass('hovered');
         clickedIds = hoverSequence(parseInt($(this).attr('id')));
       }
-
-      $(this).click(function() {
-        if (clickedFlag == false) {
-          if (clickedIds == '') { return errClick.play() }
-          clickedFlag = true;
-          replaceSequence(clickedIds);
-          gameStep();
-          clickedIds = '';
-        }
-      });
-
     });
   }, function() {
     if (clickedFlag == false) {
       $('.hovered').removeClass('hovered');
+    }
+  });
+
+  $('td').click(function() {
+    if (clickedFlag == false) {
+      if (clickedIds == '') { return errClick.play() }
+      clickedFlag = true;
+      replaceSequence(clickedIds);
+      gameStep();
+      clickedIds = '';
     }
   });
 }
