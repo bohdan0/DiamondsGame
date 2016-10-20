@@ -58,7 +58,7 @@ function getSize() {
 
 function firstLoad() {
   alert('Your goal is to burn max amount of blocks with same color. You can burn 2 or more blocks at time. Each block = 1 point. Good luck');
-  $('.info').html('Try to find your first sequence and burn it!');
+  $('.info').html('Find your first sequence and burn it!');
   makeTableHTML();
   startBoard();
   boardToScr();

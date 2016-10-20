@@ -47,17 +47,17 @@ td {
   background-size: cover;
 }
 .container {
-  position: absolute;
-  left: 510px;
-  top: 200px;
   display: none;
   z-index: 1;
+  margin: 20px;
 }
 .reset {
+  display: block;
   width: 250px;
   background: rgba(0,0,0,0);
   border: none;
   cursor: pointer;
+  margin: 0 auto;
 }
 .container h1 {
   color: black;
@@ -72,7 +72,6 @@ td {
 .container p {
   font-style: Verdana;
   font-size: 26px;
-  text-align: right;
 }
 @media screen and (max-width: 750px) {
   .musicControl {
@@ -92,4 +91,14 @@ td {
     margin: 15px 0 20px 0;
     font-size: 20px;
   }
+  .container {
+    margin: 10px;
+  }
+}
+@media screen and (max-width: 450px) {
+  .level {
+    font-size: 16px;
+  }
+  .info {
+    font-size: 16px;
 }
