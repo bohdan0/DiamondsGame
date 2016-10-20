@@ -46,7 +46,7 @@ $(document).ready(function() {
     $(this).effect('blind');
     setTimeout(function() {
       location.reload();
-    }, 700);
+    }, 400);
   });
 });
 
@@ -90,7 +90,7 @@ function setUpSounds() {
 function play() {
   var clickedIds = '';
   $('.board').hover(function() {
-    $('td').mouseover(function() {
+    $('td').hover(function() {
       if (clickedFlag == false) {
         $('.hovered').removeClass('hovered');
         clickedIds = hoverSequence(parseInt($(this).attr('id')));
@@ -104,7 +104,7 @@ function play() {
   });
 
   $('td').click(function() {
-    if (clickedFlag == false) {
+    if (clickedFlag == false && checkGameOver() == false) {
       if (clickedIds == '') { return errClick.play() }
       clickedFlag = true;
       replaceSequence(clickedIds);
@@ -225,6 +225,8 @@ function checkGameOver() {
 
 function gameOver() {
   main.pause();
+  $('.musicControl').removeClass('pause');
+  $('.musicControl').addClass('play');
   gameOverSound.play();
   $('.board').css('opacity', '0.4');
   $('.container').show();
