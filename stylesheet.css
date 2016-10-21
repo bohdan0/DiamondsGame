@@ -20,12 +20,14 @@ td {
   margin: 20px auto;
   text-align: center;
   font-size: 20px;
+  cursor: context-menu;
 }
 .info {
   font-size: 26px;
   font-weight: bold;
   margin: 10px auto;
   text-align: center;
+  cursor: context-menu;
 }
 .musicControl {
   height: 80px;
@@ -63,6 +65,7 @@ td {
   color: black;
   margin: 5px;
   text-align: center;
+  cursor: context-menu;
 }
 .container img {
   height: 80px;
@@ -75,8 +78,8 @@ td {
 }
 @media screen and (max-width: 750px) {
   .musicControl {
-    width: 50px;
-    height: 50px;
+    width: 60px;
+    height: 60px;
     left: 10px;
     top: 10px;
   }
@@ -96,6 +99,12 @@ td {
   }
 }
 @media screen and (max-width: 450px) {
+  .musicControl {
+    width: 30px;
+    height: 30px;
+    left: 10px;
+    top: 15px;
+  }
   .level {
     font-size: 16px;
   }

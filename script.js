@@ -3,6 +3,8 @@ var board;
 var size;
 var clickedFlag = false;
 var difficulty = 3;
+var hoveredCoord = '';
+var hoveredId = '';
 // Sound variables
 var regClick;
 var specClick;
@@ -12,51 +14,13 @@ var levelUp;
 var main;
 
 $(document).ready(function() {
-  getSize();
   firstLoad();
   setUpSounds();
   play();
-
-  $('.musicControl').hover(function() {
-    $(this).addClass('hovered');
-  }, function() {
-    $(this).removeClass('hovered');
-  });
-
-  $('.musicControl').click(function() {
-    $(this).effect('bounce');
-    if (main.paused) {
-      main.play();
-      $('.musicControl').removeClass('play');
-      $('.musicControl').addClass('pause');
-    } else {
-      main.pause();
-      $('.musicControl').removeClass('pause');
-      $('.musicControl').addClass('play');
-    }
-  });
-
-  $('.reset').hover(function() {
-    $(this).addClass('hovered');
-  }, function() {
-    $(this).removeClass('hovered');
-  });
-
-  $('.reset').click(function() {
-    $(this).effect('blind');
-    setTimeout(function() {
-      location.reload();
-    }, 400);
-  });
 });
 
-function getSize() {
-  while (isNaN(size) || size < 2) {
-    size = parseInt(prompt('Enter size of your Board. Size must be GREATER THAN ONE!'));
-  }
-}
-
 function firstLoad() {
+  getSize();
   alert('Your goal is to burn max amount of blocks with same color. You can burn 2 or more blocks at time. Each block = 1 point. Good luck');
   $('.info').html('Find your first sequence and burn it!');
   makeTableHTML();
@@ -85,33 +49,36 @@ function setUpSounds() {
   main.setAttribute('src', 'main.mp3');
   main.setAttribute('autoplay', 'autoplay');
   main.setAttribute('loop', 'loop');
+
+  $('.musicControl').hover(function() {
+    $(this).addClass('hovered');
+  }, function() {
+    $(this).removeClass('hovered');
+  });
+
+  $('.musicControl').click(function() {
+    $(this).effect('bounce');
+    if (main.paused) {
+      main.play();
+      $('.musicControl').removeClass('play');
+      $('.musicControl').addClass('pause');
+    } else {
+      main.pause();
+      $('.musicControl').removeClass('pause');
+      $('.musicControl').addClass('play');
+    }
+  });
 }
 
 function play() {
-  var clickedIds = '';
-  $('.board').hover(function() {
-    $('td').hover(function() {
-      if (clickedFlag == false) {
-        $('.hovered').removeClass('hovered');
-        clickedIds = hoverSequence(parseInt($(this).attr('id')));
-      }
-    });
-  }, function() {
-    if (clickedFlag == false) {
-      $('.hovered').removeClass('hovered');
-      // clickedIds = '';
-    }
-  });
+  listenForHover();
+  listenForClick();
+}
 
-  $('td').click(function() {
-    if (clickedFlag == false && checkGameOver() == false) {
-      if (clickedIds == '') { return errClick.play() }
-      clickedFlag = true;
-      replaceSequence(clickedIds);
-      gameStep();
-      clickedIds = '';
-    }
-  });
+function getSize() {
+  while (isNaN(size) || size < 2) {
+    size = parseInt(prompt('Enter size of your Board. Size must be GREATER THAN ONE!'));
+  }
 }
 
 function makeTableHTML() {
@@ -178,6 +145,35 @@ function boardToScr() {
   }
 }
 
+function listenForHover() {
+  $('.board').hover(function() {
+    $('td').hover(function() {
+      hoveredId = parseInt($(this).attr('id'));
+      if (clickedFlag == false) {
+        $('.hovered').removeClass('hovered');
+        hoveredCoord = hoverSequence(hoveredId);
+        lightSequence(hoveredCoord);
+      }
+    });
+  }, function() {
+    if (clickedFlag == false) {
+      $('.hovered').removeClass('hovered');
+    }
+  });
+}
+
+function listenForClick() {
+  $('td').click(function() {
+    hoveredCoord = hoverSequence(hoveredId);
+    if (clickedFlag == false && checkGameOver() == false) {
+      if (hoveredCoord == '') { return errClick.play() }
+      clickedFlag = true;
+      replaceSequence(hoveredCoord);
+      gameStep();
+    }
+  });
+}
+
 function gameStep() {
   setTimeout(function() {
     $('.info').html('Total score: ' + points);
@@ -227,11 +223,25 @@ function gameOver() {
   main.pause();
   $('.musicControl').removeClass('pause');
   $('.musicControl').addClass('play');
+
   gameOverSound.play();
   $('.board').css('opacity', '0.4');
+  $('.board').css('cursor', 'auto');
   $('.container').show();
-}
 
+  $('.reset').hover(function() {
+    $(this).addClass('hovered');
+  }, function() {
+    $(this).removeClass('hovered');
+  });
+
+  $('.reset').click(function() {
+    $(this).effect('blind');
+    setTimeout(function() {
+      location.reload();
+    }, 400);
+  });
+}
 
 function hoverSequence(id) {
   var row_idx = Math.floor(id / size);
@@ -259,21 +269,20 @@ function hoverSequence(id) {
 
   if (hovered.length == 1) { return ''; }
 
-  lightSequence(hovered);
-
   return hovered;
 }
 
 function replaceSequence(arr) {
   points += arr.length;
   lightClickedSequence(arr);
+
   arr = arr.sort();
   for (var i = 0; i < arr.length; i++) {
     var row_idx = arr[i][0];
     var col_idx = arr[i][1];
 
     while (row_idx > 0) {
-      takeUpperBackground([row_idx, col_idx]);
+      takeTopBackground([row_idx, col_idx]);
       row_idx--;
     }
 
@@ -281,7 +290,7 @@ function replaceSequence(arr) {
   }
 }
 
-function takeUpperBackground (arr) {
+function takeTopBackground (arr) {
   var row_idx = arr[0];
   var col_idx = arr[1];
   board[row_idx][col_idx] = board[row_idx - 1][col_idx];
